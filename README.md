@@ -83,7 +83,7 @@ answers = ask(state="I was charged twice...", question=question)
 
 `criteria` changes shape per type: for `noul` it's `{"true": ..., "false": ...}`, for `choice` a `{option: description}` map, and for `score` a list of level descriptions (1 = first entry, 5 = last).
 
-## Notes / TODO
+## Notes
 
 - [ ] The Decisions API is an **alpha** endpoint (`/api/alpha/decisions`) — response shape may change.
 - [ ] The free model (`parallel/decisions-fast:free`) has rate limits; add error handling / backoff for batch runs.
