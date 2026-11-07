@@ -1,5 +1,9 @@
 # JEV-PYTHON
 
+<p align="center">
+  <img src="img/jev-image.png" alt="JEV — Python wrapper for the Decisions API: noul (yes/no), choice (pick one), and score (rate 1–5) returning probabilities, options, and ratings" width="800" />
+</p>
+
 A Python sandbox for the [OpenRouter **Decisions** API](https://openrouter.ai/api/alpha/decisions) (`parallel/decisions-fast:free`).
 
 Instead of free-form chat completions, the Decisions API answers **structured questions** about a `state` (some text you provide) and returns **typed, machine-readable answers** — probabilities, choices, and scores with confidence values. `jev.py` is a thin wrapper (`ask()`) around that endpoint; the numbered files are standalone examples, one per decision type.
