@@ -18,6 +18,8 @@ All three decision types supported by the API are implemented:
 | `choice` | Picks ONE option from a list you define | `["team"]["choice"]` + `["confidence"]` | `02_choice.py` |
 | `score` | Numeric rating on a scale you define (1–5) | `["candidate_score"]["score"]` + `["legend"]` + `["confidence"]` | `04_score.py` |
 
+`05_example.py` combines all three types in one pipeline — see below.
+
 ### 1. `noul` — yes/no probabilistic decision
 Ask whether something is true, get back a probability, then branch on a threshold (`> 0.5` → refund team, else → normal queue).
 Used for: intent detection, gating, classification into exactly two buckets.
@@ -30,6 +32,14 @@ Used for: routing (which support team?), category tagging, picking one of N know
 Define a scale and a rubric; the API returns a float score, a `legend` mapping each level to a label, and a confidence.
 Used for: quality/fit ratings (candidate evaluation), prioritization, grading.
 
+### 4. Putting it together — a full triage pipeline
+`05_example.py` runs an 8-ticket support inbox through **five questions in a single `ask()` call** (two `noul` + one `choice` + two `score`) and turns the answers into an action:
+
+- `noul` flags → urgent tickets (security/unauthorized payments) and refund-worthy tickets
+- `choice` → routes to the right department (Technical Support / Billing / Account Management / Sales / Customer Success)
+- `score` → business priority (1–5) and customer sentiment (1–5)
+- Routing logic: low confidence (< 0.75) → human review, urgent → immediate notify, refund → refund queue, else → normal department queue
+
 ## Project structure
 
 ```
@@ -38,6 +48,7 @@ jev.py             # shared client: ask(state, question) -> data["answers"]
 02_choice.py       # choice type — route 5 support messages to teams
 03_noul.py         # noul type — refund detection over 8 messages
 04_score.py        # score type — score 5 candidates for a Python backend role
+05_example.py      # all 3 types combined — triage 8 support tickets (urgency, refund, department, priority, sentiment)
 pyproject.toml     # uv project metadata + dependencies
 .env               # OPENROUTER_API_KEY + MODEL (not committed — see setup)
 ```
@@ -61,6 +72,7 @@ uv run 01_test_call.py   # raw call + threshold routing
 uv run 03_noul.py        # yes/no decisions
 uv run 02_choice.py      # option picking / routing
 uv run 04_score.py       # 1-5 scoring
+uv run 05_example.py     # combined pipeline: full ticket triage
 ```
 
 Or without installing uv: create a venv with Python 3.13+, `pip install python-dotenv requests`, and run `python 02_choice.py` etc. directly.
