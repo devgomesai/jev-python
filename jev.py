@@ -24,5 +24,5 @@ def ask(state, question):
     )
     resposne.raise_for_status()
     data = resposne.json()
-    # print(json.dumps(data, indent=2)) #required for debugging
+    # print(json.dumps(data, indent=2)) # Uncomment to inspect the full response payload.
     return data["answers"]
