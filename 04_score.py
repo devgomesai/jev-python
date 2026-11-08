@@ -12,10 +12,7 @@ candidates = [
 question = {
     "candidate_score": {
         "type": "score",
-        "instructions": """
-        Evaluate how well the candidate matches a Python AI Backend Developer role.
-        Score the candidate from 1 to 5.
-        """,
+        "instructions": "Evaluate how well the candidate matches a Python AI Backend Developer role.",
         "criteria": [
             "Poor: No relevant programming experience or skills.",
             "Basic: Fundamental Python knowledge with academic projects.",
