@@ -119,29 +119,34 @@ questions = {
     },
 }
 
-for ticket in inbox:
-    ans = ask(state=ticket, questions=questions)
+def main() -> None:
+    for ticket in inbox:
+        ans = ask(state=ticket, questions=questions)
 
-    is_urgent = ans["is_urgent"]["noul"] > 0.5
-    requires_refund = ans["requires_refund"]["noul"] > 0.5
-    department = ans["department"]["choice"]
-    confidence = ans["department"]["confidence"]
-    priority = ans["priority"]["score"]
-    customer_sentiment = ans["customer_sentiment"]["score"]
+        is_urgent = ans["is_urgent"]["noul"] > 0.5
+        requires_refund = ans["requires_refund"]["noul"] > 0.5
+        department = ans["department"]["choice"]
+        confidence = ans["department"]["confidence"]
+        priority = ans["priority"]["score"]
+        customer_sentiment = ans["customer_sentiment"]["score"]
 
-    if confidence < 0.75:
-        action = "LOW CONFIDENCE: Send to human review"
-    elif is_urgent:
-        action = f"URGENT: NOTIFY {department} immediately"
-    elif requires_refund:
-        action = "Add to the refund queue"
-    else:
-        action = f"Normal queue for {department}"
+        if confidence < 0.75:
+            action = "LOW CONFIDENCE: Send to human review"
+        elif is_urgent:
+            action = f"URGENT: NOTIFY {department} immediately"
+        elif requires_refund:
+            action = "Add to the refund queue"
+        else:
+            action = f"Normal queue for {department}"
 
-    print(f"\n{ticket['id']}: {ticket['subject']}")
-    print(
-        f"  department={department} ({confidence:.0%}), "
-        f"urgent={is_urgent}, refund={requires_refund}"
-    )
-    print(f"  priority={priority:.2f}, sentiment={customer_sentiment:.2f}")
-    print(f"  -> {action}")
+        print(f"\n{ticket['id']}: {ticket['subject']}")
+        print(
+            f"  department={department} ({confidence:.0%}), "
+            f"urgent={is_urgent}, refund={requires_refund}"
+        )
+        print(f"  priority={priority:.2f}, sentiment={customer_sentiment:.2f}")
+        print(f"  -> {action}")
+
+
+if __name__ == "__main__":
+    main()

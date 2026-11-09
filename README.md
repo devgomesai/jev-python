@@ -43,13 +43,14 @@ Used for: quality/fit ratings (candidate evaluation), prioritization, grading.
 ## Project structure
 
 ```
-jev.py             # shared client: ask(state, question) -> data["answers"]
+jev.py             # shared client: ask(state, questions) -> response["answers"]
 01_test_call.py    # raw requests.post — noul type, inline (no jev.py import)
 02_choice.py       # choice type — route 5 support messages to teams
 03_noul.py         # noul type — refund detection over 8 messages
 04_score.py        # score type — score 5 candidates for a Python backend role
 05_example.py      # all 3 types combined — triage 8 support tickets (urgency, refund, department, priority, sentiment)
 pyproject.toml     # uv project metadata + dependencies
+tests/             # offline pytest suite (HTTP + sleep mocked, never contacts OpenRouter)
 .env               # OPENROUTER_API_KEY + MODEL (not committed — see setup)
 ```
 
@@ -93,15 +94,30 @@ question = {
     }
 }
 
-answers = ask(state="I was charged twice...", question=question)
+answers = ask(state="I was charged twice...", questions=question)
 # answers["team"] -> choice, confidence
 ```
 
 `criteria` changes shape per type: for `noul` it's `{"true": ..., "false": ...}`, for `choice` a `{option: description}` map, and for `score` a list of level descriptions (1 = first entry, 5 = last).
 
+`state` accepts either a plain string or a dict (e.g. a structured ticket in `05_example.py`) — it is sent to the API unchanged.
+
+## Environment, errors and retries
+
+`ask()` reads `MODEL` and `OPENROUTER_API_KEY` from the environment on each call, so importing `jev.py` works without a configured `.env`; the error only surfaces when you call it (a descriptive `RuntimeError` naming the missing variable), or when the response has no `answers` key (alpha endpoint shape changes).
+
+HTTP `429` and transient `5xx` (`500/502/503/504`) responses are retried up to **2 times** with exponential backoff (2s, then 4s); other `4xx` responses raise immediately via `requests.HTTPError`. The request timeout is 60 seconds.
+
+## Tests
+
+An offline pytest suite covers configuration errors, response handling, retry/backoff behavior and the exact request contract — all HTTP calls and sleeps are mocked, and the tests never contact OpenRouter or read real API keys:
+
+```powershell
+uv run pytest
+```
+
 ## Notes
 
-- [ ] The Decisions API is an **alpha** endpoint (`/api/alpha/decisions`) — response shape may change.
-- [ ] The free model (`parallel/decisions-fast:free`) has rate limits; add error handling / backoff for batch runs.
-- [ ] `jev.py` debug: uncomment the `print(json.dumps(data, indent=2))` line to see the full raw response.
+- [ ] The Decisions API is an **alpha** endpoint (`/api/alpha/decisions`) — response shape may change; `ask()` fails with a clear error if the `answers` key disappears.
+- [ ] The free model (`parallel/decisions-fast:free`) has rate limits; transient `429`/`5xx` responses are retried automatically (2 retries, exponential backoff), but batch runs should still expect occasional failures.
 - [ ] Make sure `.env` stays out of git and out of GitHub — rotate any key that was ever committed.

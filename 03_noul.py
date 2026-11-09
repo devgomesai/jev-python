@@ -23,7 +23,12 @@ question = {
     }
 }
 
-for message in messages:
-    ans = ask(state=message, questions=question)
-    is_refund = ans["is_refund"]
-    print(f"{message}\n -> {'Refund' if is_refund['noul'] > 0.5 else 'Not Refund'}\n")
+def main() -> None:
+    for message in messages:
+        ans = ask(state=message, questions=question)
+        is_refund = ans["is_refund"]
+        print(f"{message}\n -> {'Refund' if is_refund['noul'] > 0.5 else 'Not Refund'}\n")
+
+
+if __name__ == "__main__":
+    main()

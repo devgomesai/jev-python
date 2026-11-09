@@ -23,7 +23,12 @@ question = {
     }
 }
 
-for message in messages:
-    ans = ask(state=message, questions=question)
-    team = ans["team"]
-    print(f"{message}\n -> {team['choice']} ({team['confidence']:.0%} confident)\n")
+def main() -> None:
+    for message in messages:
+        ans = ask(state=message, questions=question)
+        team = ans["team"]
+        print(f"{message}\n -> {team['choice']} ({team['confidence']:.0%} confident)\n")
+
+
+if __name__ == "__main__":
+    main()

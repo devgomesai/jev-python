@@ -23,12 +23,17 @@ question = {
     }
 }
 
-for candidate in candidates:
-    ans = ask(state=candidate, questions=question)
-    candidate_score = ans["candidate_score"]
+def main() -> None:
+    for candidate in candidates:
+        ans = ask(state=candidate, questions=question)
+        candidate_score = ans["candidate_score"]
 
-    level = round(candidate_score["score"])
-    label = candidate_score["legend"][str(level)]
+        level = round(candidate_score["score"])
+        label = candidate_score["legend"][str(level)]
 
-    print(candidate)
-    print(f" score {candidate_score['score']:.2f} -> {label} ({candidate_score['confidence']:.0%} confident)")
+        print(candidate)
+        print(f" score {candidate_score['score']:.2f} -> {label} ({candidate_score['confidence']:.0%} confident)")
+
+
+if __name__ == "__main__":
+    main()
