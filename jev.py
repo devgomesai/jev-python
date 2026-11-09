@@ -11,14 +11,14 @@ URL = "https://openrouter.ai/api/alpha/decisions"
 MODEL = os.environ['MODEL']
 
 
-def ask(state, question):
+def ask(state, questions):
     resposne = requests.post(
         URL,
         headers={"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}"},
         json={
             "model": MODEL,
             "state": state,
-            "questions": question,
+            "questions": questions,
         },
         timeout=60,
     )

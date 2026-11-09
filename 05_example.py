@@ -67,7 +67,7 @@ inbox = [
     },
 ]
 
-question = {
+questions = {
     "is_urgent": {
         "type": "noul",
         "instructions": "Determine whether this ticket requires immediate operational intervention due to security incidents, unauthorized payments, widespread outages, or critical business disruptions; do not confuse customer frustration or cancellation threats with operational urgency.",
@@ -120,7 +120,7 @@ question = {
 }
 
 for ticket in inbox:
-    ans = ask(ticket, question)
+    ans = ask(ticket, questions)
 
     is_urgent = ans["is_urgent"]["noul"] > 0.5
     requires_refund = ans["requires_refund"]["noul"] > 0.5
