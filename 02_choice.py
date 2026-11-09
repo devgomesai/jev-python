@@ -24,6 +24,6 @@ question = {
 }
 
 for message in messages:
-    ans = ask(state=message, question=question)
+    ans = ask(state=message, questions=question)
     team = ans["team"]
     print(f"{message}\n -> {team['choice']} ({team['confidence']:.0%} confident)\n")

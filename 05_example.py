@@ -120,7 +120,7 @@ questions = {
 }
 
 for ticket in inbox:
-    ans = ask(ticket, questions)
+    ans = ask(state=ticket, questions=questions)
 
     is_urgent = ans["is_urgent"]["noul"] > 0.5
     requires_refund = ans["requires_refund"]["noul"] > 0.5

@@ -24,7 +24,7 @@ question = {
 }
 
 for candidate in candidates:
-    ans = ask(state=candidate, question=question)
+    ans = ask(state=candidate, questions=question)
     candidate_score = ans["candidate_score"]
 
     level = round(candidate_score["score"])
