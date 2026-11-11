@@ -84,5 +84,5 @@ def ask(state: str | dict, questions: dict) -> dict:
     data = response.json()
     if "answers" not in data:
         raise RuntimeError(f"Unexpected API response: no 'answers' key. Got keys: {list(data)}")
-    print(json.dumps(data, indent=2)) # Uncomment to inspect the full response payload.
+    # print(json.dumps(data, indent=2)) # Uncomment to inspect the full response payload.
     return data["answers"]
